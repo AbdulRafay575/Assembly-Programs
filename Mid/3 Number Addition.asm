@@ -1,11 +1,11 @@
 .model small   
 .stack 100h
 .data
-msg1 db "Enter The First Number (0 to 256) :$"  
-msg2 db 0ah,0dh,"Enter The Second Number (0 to 256) :$"
+msg1 db "Enter The First Number (0 to 255) :$"  
+msg2 db 0ah,0dh,"Enter The Second Number (0 to 255) :$"
 mull dw 100
-second db 0 
-first db 0 
+second dw 0 
+first dw 0 
 sum dw 0 
 plus db 0
 extra db 0
@@ -24,8 +24,7 @@ int 21h
 mov ah,0 
 sub al,48
 mul mull
-mov first,al 
-
+mov first,ax 
 mov ax,0
 mov ah,1
 int 21h
@@ -33,14 +32,13 @@ mov ah,0
 sub al,48
 mov cl,10
 mul cl
-add first,al 
-mov al,first
-
+add first,ax 
+mov ax,first
 mov ah,1
 int 21h
 mov ah,0 
 sub al,48
-add first,al
+add first,ax
 
 
 mov ah, 09h
@@ -55,7 +53,7 @@ int 21h
 mov ah,0 
 sub al,48
 mul mull
-mov second,al 
+mov second,ax 
 
 mov ax,0
 mov ah,1
@@ -64,25 +62,25 @@ mov ah,0
 sub al,48
 mov cl,10
 mul cl
-add second,al 
-mov al,second
+add second,ax 
+mov ax,second
 
 mov ah,1
 int 21h
 mov ah,0 
 sub al,48
-add second,al
+add second,ax
 
-mov al,second
+mov ax,second
 mov ah,2
 int 21h   
 ;
 
 
 
-mov bl,first 
+mov bx,first 
 mov cx,0
-mov cl,second
+mov cx,second
 add  bx,cx
   
 
