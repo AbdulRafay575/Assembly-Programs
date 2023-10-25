@@ -83,6 +83,15 @@ mov al,bl
 mov dl,bl
 add dl,48
 mov ah,2 
+int 21h   
+
+pop bx
+cmp bl,59
+JG sure 
+mov al,bl 
+mov dl,bl
+add dl,48
+mov ah,2 
 int 21h
 
 
