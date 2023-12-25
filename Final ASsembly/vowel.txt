@@ -1,0 +1,66 @@
+.model small   
+.stack 100h
+.data
+array db 5 dup (?)
+ten dw 10 
+enter db 13
+lp dw ?
+fac dw ?
+mull dw 0    
+mg db 0ah,0dh,"Enter Charachter:$" 
+msg1 db 0ah,0dh,"Entered Alphabet is Vowel$"
+msg3 db 0ah,0dh,"Entered Alphabet is Consonant$"  
+msg2 db 0ah,0dh,"Check another Alphabet (y,n)?:$"
+.code
+mov ax, @data
+mov ds, ax   
+startt:
+mov dx,offset mg
+mov ah,09h
+int 21h 
+
+mov ah, 1
+int 21h  
+mov ah,0
+mov bx,ax
+cmp bx,97
+JL small
+there:
+cmp bx, 97  
+je vowel 
+cmp bx, 101 
+je vowel 
+cmp bx, 105
+je vowel 
+cmp bx, 111
+je vowel 
+cmp bx, 117
+je vowel 
+
+mov dx,offset msg3
+mov ah,09h
+int 21h 
+jmp done
+
+vowel:
+mov dx,offset msg1
+mov ah,09h
+int 21h    
+jmp done
+
+done:
+mov dx,offset msg2
+mov ah,09h
+int 21h 
+mov ah, 1
+int 21h 
+cmp al,'y'
+je startt 
+
+mov ah, 4ch
+int 21h
+
+small:
+add bx,32
+jmp there
+end

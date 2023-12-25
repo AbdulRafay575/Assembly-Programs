@@ -1,0 +1,130 @@
+.model small   
+.stack 100h
+.data
+array db 5 dup (?)
+ten dw 10 
+enter db 13
+lp dw ?
+first dw ?
+mull dw 0    
+mg db 0ah,0dh,"Enter Number:$" 
+pal db 0ah,0dh,"Palindrome$" 
+notpal db 0ah,0dh,"Not Palindrome$" 
+msg2 db 0ah,0dh,"Wanna REverse Another Number (y,n) ?:$"
+.code
+mov ax, @data
+mov ds, ax   
+startt:    
+mov bx,0
+mov dx,offset mg
+mov ah,09h
+int 21h 
+
+mov si, 0 
+start:
+mov ah, 1
+int 21h 
+cmp al, enter
+je done 
+
+sub al, 48 
+mov ah,0
+mov [array+si],al
+inc si
+jmp start
+
+;multiply logic here
+multiply:
+mul ten
+jmp there
+ 
+done:  
+mov mull, si 
+mov di, 0
+mov ax, 0
+mov si, 0 
+mov cx, 0
+mov cx,mull     
+;adding string input
+addup: 
+mov ax,0
+mov al,[array+di]
+mov lp,cx
+again:
+inc si
+;mov bx,ax
+cmp cx,1
+jG multiply 
+there:
+loop again
+add bx,ax
+inc di
+mov cx,lp
+loop addup
+mov first,bx
+
+mov di,1 
+mov si,0
+output:
+
+mov dx,0
+mov ax,bx
+div ten
+mov bx,ax
+mov [array+si],dl 
+cmp bx,0
+je done2
+inc di 
+inc si
+jmp output
+  
+
+;multiply logic here
+multiply2:
+mul ten
+jmp there2
+
+done2:
+mov si,0
+mov cx,di
+outer: 
+mov ax,0
+mov al,[array+si]
+
+inner: 
+cmp cx,1
+jG multiply2 
+there2:     
+loop inner
+add bx,ax
+
+mov cx,di 
+dec di
+inc si
+loop outer
+
+cmp bx,first
+je palin
+mov dx,offset notpal
+mov ah,09h
+int 21h 
+jmp here
+palin:
+mov dx,offset pal
+mov ah,09h
+int 21h 
+
+here:
+mov dx,offset msg2
+mov ah,09h
+int 21h 
+mov ah, 1
+int 21h 
+cmp al,'y'
+je startt 
+
+mov ah, 4ch
+int 21h
+
+
+end

@@ -1,0 +1,64 @@
+.model small
+.stack 100h
+.data
+    array db 4 dup (?)
+    msg db "Enter A Number :$"
+    msg1 db 0ah,0dh,"In Binary Form :$"
+    divi db 2
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+    mov si,0
+    
+    mov dx, offset msg
+    mov ah, 09h
+    int 21h
+
+    mov ah, 01h
+    int 21h
+    mov ah,0
+    sub ax, 48
+    mov bx, ax
+    mov cx,10
+    
+    binary:
+    cmp bl,0
+    je done
+    cmp bl,1
+    je done
+    mov ah,0
+    div divi
+    mov bl,al
+    mov bh,ah
+    mov [array+si],bh
+    inc si 
+    mov ax,bx   
+    loop binary
+ 
+    done: 
+    mov dx, offset msg1
+    mov ah, 09h
+    int 21h
+    mov dl, bl  
+    add dl, 48  
+    mov ah, 02h
+    int 21h
+    cmp si,0
+    je end 
+    mov cx,si 
+    dec si
+    print: 
+    mov dl, [array+si]  
+    add dl, 48 
+    mov ah, 02h
+    int 21h
+    dec si
+    loop print
+    
+    end:
+    mov ah, 4Ch
+    int 21h
+
+main endp
+end main

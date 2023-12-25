@@ -1,45 +1,103 @@
             .model small   
-.data
+.data   
+
+array db 5 dup (?) 
+enter db 13
+lp dw ?
+mull dw 0    
+mg db "Enter The Number:$" 
 second dw 0 
 first dw 0  
 op db 0 
 ten dw 10 
 hundred dw 100
-array db 5 dup ? 
 msg1 db 0ah,0dh,"Enter Number then operator and than number$"
 msg db 0ah,0dh,"The Answer Is :$"  
 msg3 db 0ah,0dh,"$"
 .code
 mov ax, @data
-mov ds, ax
-mov cl,10    
+mov ds, ax 
+mov dx,offset mg
+mov ah,09h
+int 21h 
+
+mov si, 0 
+start:
+mov ah, 1
+int 21h 
+cmp al, enter
+je done1
+sub al, 48 
+mov ah,0
+mov [array+si],al
+inc si
+jmp start
+ 
+done1:  
+mov mull, si 
+mov di, 0
+mov ax, 0
+mov si, 0 
+mov cx, 0
+mov cx,mull     
+;adding string input
+addup: 
+mov ax,0
+mov al,[array+di]
+mov lp,cx
+again:
+inc si
+cmp cx,1
+jG multiply 
+there:
+loop again
+add bx,ax
+inc di
+mov cx,lp
+loop addup
+mov first,bx
+mov bx,0
+
 mov ah, 09h
-lea dx, msg1
-int 21h     
+lea dx, msg3
+int 21h
 
 
-mov ah,1
-int 21h
-mov ah,0 
-sub al,48 
-mov ah,0 
-mul hundred 
-mov first,ax
-mov ah,1
-int 21h
-mov ah,0 
-sub al,48
+mov si, 0 
+start2:
+mov ah, 1
+int 21h 
+cmp al, enter
+je done2
+sub al, 48 
 mov ah,0
-mul ten   
-add first,ax
-mov ah,1
-int 21h
-mov ah,0 
-sub al,48
-mov ah,0
-add first,ax   
+mov [array+si],al
+inc si
+jmp start2 
+done2:  
+mov mull, si 
+mov di, 0
+mov ax, 0
+mov si, 0 
+mov cx, 0
+mov cx,mull     
+;adding string input
+addup2: 
+mov ax,0
+mov al,[array+di]
+mov lp,cx
+again2:
+inc si
+cmp cx,1
+jG multiply2 
+there2:
+loop again2
+add bx,ax
+inc di
+mov cx,lp
+loop addup2
+mov second,bx 
 
-mov ax,first
 mov ah, 09h
 lea dx, msg3
 int 21h
@@ -47,38 +105,9 @@ int 21h
 Mov ah, 01h
 int 21h
 mov op,al
-
-
-mov ah, 09h
-lea dx, msg3
-int 21h
-
-mov ah,1
-int 21h
-mov ah,0 
-sub al,48
-mov ah,0
-mul hundred
-mov second,ax
-mov ah,1
-int 21h
-mov ah,0 
-sub al,48
-mul ten  
-mov ah,0
-add second,ax  
-mov ah,1
-int 21h
-mov ah,0 
-sub al,48    
-mov ah,0
-add second,ax  
-
 mov al,op
 
 cmp al, '+'
-
-
 je addition
 
 cmp al, '*'
@@ -106,7 +135,8 @@ jmp divide
 division:
 mov ax,0
 mov ax,first
-div  second 
+mov bx,second
+div  bx 
 jmp divide
 
 multiplication:
@@ -122,7 +152,7 @@ mov cx,10
 
 divide: 
 mov bx,0
-
+mov si,0
 mov dx,0 
 dividee:
 mov bx,ax
@@ -155,5 +185,13 @@ jmp outputnumber
 done:
 mov ah,4ch
 int 21h
+
+multiply:
+mul ten
+jmp there
+
+multiply2:
+mul ten
+jmp there2
 
 end
