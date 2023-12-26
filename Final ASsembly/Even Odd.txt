@@ -63,7 +63,7 @@ loop addup
 
 
 
-;factorial logic
+
 mov ax,bx  
 mov dx,0
 mov cx,2
